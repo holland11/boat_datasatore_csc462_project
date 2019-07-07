@@ -16,9 +16,21 @@ def main():
                 temp = ['Heading', 'Spec Heading']
                 temp.extend(row)
                 temp = temp[:31] + temp[37:]
-                temp = temp[:7]+ temp[8:]
-                temp = temp[:3]+ temp[4:]
+                temp = temp[:7] + temp[8:]
+                temp = temp[:3] + temp[4:]
                 temp[15] = temp[15][0:-1] # "Preferred MFG." to "Preferred MFG"
+                temp = temp[:2] + temp[3:]
+                temp = temp[:21] + temp[22:]
+                temp = temp[:8] + temp[9:]
+                temp = temp[:6] + temp[7:]
+                temp = temp[:4] + temp[5:]
+                temp = temp[:4] + temp[12:] 
+                temp[14] = "Transverse Moment"
+                temp[16] = "Material And Color"
+                for i in range(len(temp)):
+                    print('{}: '.format(temp[i]),end='')
+                    temp[i] = temp[i].replace(' ', '_') # replace spaces with underscores
+                    print('<input type="text" name="{}">\n<br>\n'.format(temp[i]),end='')
                 row = temp
                 col_headers = row
                 for i in range(len(row)):
@@ -32,10 +44,18 @@ def main():
                 temp.extend(row)
                 temp = temp[:31] + temp[37:] # these were all empty for 2522/2522 spec item rows 
                     # 31:Document Number  32:Start Date  33:3D Model In Library  34:End Date  35:Duration  36:Predecessors
-                temp = temp[:7]+ temp[8:] # 2/2522 7:GCMNA Scope
-                temp = temp[:3]+ temp[4:] # 15/2522 3:GCMNA Code
+                temp = temp[:7] + temp[8:] # 2/2522 7:GCMNA Scope
+                temp = temp[:3] + temp[4:] # 15/2522 3:GCMNA Code
+                temp = temp[:2] + temp[3:] # 105/2522 2:Check Item
+                temp = temp[:21] + temp[22:] # 21:% of Parent Weight
+                temp = temp[:8] + temp[9:] # 8:Places to reduce from 38 Meter
+                temp = temp[:6] + temp[7:] # 6:Update Status
+                temp = temp[:4] + temp[5:] # 4:Selected Item
+                temp = temp[:4] + temp[12:]				
+					# 4:GCMNA Point Person  5:History  6:Builder  ID Number  7:Location  8:Category  9:Electrical  10:Unit Measurement (Feet)  11:Preferred MFG
                 row = temp
                 spec_items.append(row)
+                if (row[3] == ''): continue # Features column is empty so we skip (2/2522 rows have this empty)
                 for i in range(len(row)):
                     if (row[i] != ''):
                         col_count[i]+=1
@@ -52,23 +72,23 @@ def main():
             for row in spec_items:
                 csv_writer.writerow(row)
                 
-        print(f'\n\t---Headings---')
+        print('\n\t---Headings---')
         
         for i in range(len(col_headers)):
-            print(f'{i}:{col_headers[i]}',end='    ')
+            print('{}:{}'.format(i, col_headers[i]),end='    ')
         print()
-        print(f'\n\t---First 7 rows---')
+        print('\n\t---First 7 rows---')
         for row in spec_items[:7]:
             print(row)
-        print(f'\n\t---Misc---')    
-        print(f'{col_count}')
-        print(f'total rows: {line_count} item spec rows: {len(spec_items)}')
+        print('\n\t---Misc---')    
+        print('{}'.format(col_count))
+        print('total rows: {} item spec rows: {}'.format(line_count, len(spec_items)))
         
         sorted_index_order = list(range(len(col_count)))
         col_count, sorted_index_order = (list(t) for t in zip(*sorted(zip(col_count, sorted_index_order), reverse=True)))
         
         
-        print(f'\n\t---Sorted---')
+        print('\n\t---Sorted---')
         print(sorted_index_order)
         print(col_count)
         

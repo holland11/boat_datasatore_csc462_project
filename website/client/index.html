@@ -2,8 +2,55 @@
    <body>
       
       <form action = "http://127.0.0.1:3000/" method = "POST">
-         Filter(json): <input type = "text" name = "filter">
-         <input type = "submit" value = "Submit">
+		DB Type:
+			<select name="db_type">
+				<option value="mongo">MongoDB</option>
+				<option value="mysql">MySQL</option>
+			<select>
+		<br>
+		Request Type:
+			<select name="req_type">
+				<option value="read">Read</option>
+				<option value="write">Write</option>
+			<select>
+		<br>
+        Heading: <input type="text" name="Heading">
+		<br>
+		Spec Heading: <input type="text" name="Spec_Heading">
+		<br>
+		Sorting Nature of Info Produced: <input type="text" name="Sorting_Nature_of_Info_Produced">
+		<br>
+		Features: <input type="text" name="Features">
+		<br>
+		Model: <input type="text" name="Model">
+		<br>
+		Hyperlink: <input type="text" name="Hyperlink">
+		<br>
+		Source: <input type="text" name="Source">
+		<br>
+		Weight Per Unit (LBS): <input type="text" name="Weight_Per_Unit_(LBS)">
+		<br>
+		Quantity: <input type="text" name="Quantity">
+		<br>
+		Weight Total (LBS): <input type="text" name="Weight_Total_(LBS)">
+		<br>
+		LCG: <input type="text" name="LCG">
+		<br>
+		TCG: <input type="text" name="TCG">
+		<br>
+		VCG: <input type="text" name="VCG">
+		<br>
+		Longitudinal Moment: <input type="text" name="Longitudinal_Moment">
+		<br>
+		Transverse Moment: <input type="text" name="Transverse_Moment">
+		<br>
+		Vertical Moment: <input type="text" name="Vertical_Moment">
+		<br>
+		Material And Color: <input type="text" name="Material_And_Color">
+		<br>
+		Size: <input type="text" name="Size">
+		<br>
+        <input type="submit" value="Submit">
       </form>
       
    </body>

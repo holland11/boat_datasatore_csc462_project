@@ -5,26 +5,18 @@ const port = 3000
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const mongo = require('mongodb').MongoClient
-
-const url = 'mongodb://localhost:27040'
+const mongo_api = require('./mongo_funcs')
+const mysql_api = require('./mysql_funcs')
 
 app.get('/', (req, res) => 
 	res.sendFile(__dirname + "/client/index.html")
 )
 app.post('/', (req, res) => { 
-	mongo.connect(url, (err, client) => {
-		if (err) {
-			console.error(err)
-			return
-		}
-		const db = client.db('school')
-		const collection = db.collection('students')
-		collection.find({name: req.body.filter}).toArray((err, items) => {
-			console.log(items)
-		})
-		client.close()
-	})
+	if (req.body.db_type == "mongo") {
+		mongo_api.handle_req(req, res)
+	} else {
+		mysql_api.handle_req(req, res)
+	}
 	res.redirect('back')
 })
 
