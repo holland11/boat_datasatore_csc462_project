@@ -32,10 +32,8 @@ def main():
                 for i in range(num_duplicates):
                     multiplier = (random.random() * 0.2) + 0.85 # random number between 0.85 -> 1.15
                     new_row = row.copy()
-                    new_row[4] = new_row[4] + ' ({})'.format(i) # 4: Features (name of item)
+                    new_row[3] = new_row[3] + ' ({})'.format(i) # 4: Features (name of item)
                     csv_writer.writerow(new_row)
-                    #new_row[14] = new_row[14]*multiplier # 14: Unit Measurement (Feet)
-                    #new_row[
                     
                 line_count += 1
                 
