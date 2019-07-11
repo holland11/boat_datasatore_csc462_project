@@ -21,3 +21,21 @@ sudo yum install -y mongodb-org
 to run mongos instead of mongod:
 
 docker container run -p 27017:27017 --entrypoint mongos mongo --configdb conf/localhost:27017
+
+
+
+to get the ip address and name of each running instance:
+
+aws ec2 describe-instances --filter "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[PublicIpAddress, Tags[?Key=='Name'].Value|[0]]" --output text
+
+output:
+34.214.1.154    s0rs0
+34.218.247.239  s0rs1
+
+to put them into an associative array (map) where arr[s0rs0] = 34.214.1.154
+
+declare -A name_to_ip_map=(); while read -r a b; do name_to_ip_map["$b"]="$a"; done < <(aws ec2 describe-instances --filter "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[PublicIpAddress, Tags[?Key=='Name'].Value|[0]]" --output text)
+
+echo ${name_to_ip_map["s0rs0"]}
+
+output: 34.214.1.154
