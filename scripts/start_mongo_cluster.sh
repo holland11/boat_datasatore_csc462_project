@@ -9,7 +9,7 @@
 #export AWS_SECRET_ACCESS_KEY="40 digit code"
 #export AWS_DEFAULT_REGION="us-west-2"
 AWS_INSTANCE_ID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
-AWS_INSTANCE_NAME=`aws ec2 describe-tags --filters "Name=resource-id,Values=$AWS_INSTANCE_ID" "Name=key,Values=Name" --output text | cut -f5`
+AWS_INSTANCE_NAME=`aws ec2 describe-tags --region $AWS_DEFAULT_REGION --filters "Name=resource-id,Values=$AWS_INSTANCE_ID" "Name=key,Values=Name" --output text | cut -f5`
 
 # maybe make this go up to like s10rs0->s10rs2 so that it can handle more shards, but doesn't require them?
 if [ $AWS_INSTANCE_NAME = "s0rs0" ] || [ $AWS_INSTANCE_NAME = "s0rs1" ] || [ $AWS_INSTANCE_NAME = "s0rs2" ]

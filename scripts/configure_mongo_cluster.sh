@@ -8,7 +8,7 @@
 #export AWS_SECRET_ACCESS_KEY="40 digit code"
 #export AWS_DEFAULT_REGION="us-west-2"
 AWS_INSTANCE_ID=`curl -s http://169.254.169.254/latest/meta-data/instance-id`
-AWS_INSTANCE_NAME=`aws ec2 describe-tags --filters "Name=resource-id,Values=$AWS_INSTANCE_ID" "Name=key,Values=Name" --output text | cut -f5`
+AWS_INSTANCE_NAME=`aws ec2 describe-tags --region $AWS_DEFAULT_REGION --filters "Name=resource-id,Values=$AWS_INSTANCE_ID" "Name=key,Values=Name" --output text | cut -f5`
 
 declare -A name_to_ip_map=(); while read -r a b; do name_to_ip_map["$b"]="$a"; done < <(aws ec2 describe-instances --filter "Name=instance-state-name,Values=running" --query "Reservations[].Instances[].[PublicIpAddress, Tags[?Key=='Name'].Value|[0]]" --output text)
 
