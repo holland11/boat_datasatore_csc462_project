@@ -1,0 +1,1 @@
+docker container run -p 27018:27017 --name s0rs0 mongo --port 27017 --replSet s0 --shardsvr --smallfiles

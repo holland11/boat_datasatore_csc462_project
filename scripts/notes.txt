@@ -1,0 +1,23 @@
+to yum install mongodb:
+
+sudo rm -rf /etc/yum.repos.d/mongod*
+
+sudo yum clean all
+
+again create repo file
+
+sudo vi /etc/yum.repos.d/mongodb-org-3.4.repo
+
+[mongodb-org-3.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+
+sudo yum install -y mongodb-org
+
+
+to run mongos instead of mongod:
+
+docker container run -p 27017:27017 --entrypoint mongos mongo --configdb conf/localhost:27017
