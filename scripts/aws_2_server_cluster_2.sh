@@ -7,7 +7,7 @@ docker container run -d -p 37017:27017 --name s1rs2 mongo --port 27017 --replSet
 
 docker container run -d -p 47017:27017 --name confrs2 mongo --port 27017 --replSet conf --configsvr --smallfiles
 
-wait 5
+sleep 5
 
 mongo --port 27017 << EOF
 config = { _id: "s0", members:[
@@ -17,6 +17,8 @@ config = { _id: "s0", members:[
 rs.initiate(config)
 EOF
 
+sleep 3
+
 mongo --port 37017 << EOF
 config = { _id: "s1", members:[
 		  { _id : 0, host : "$node1:37017" },
@@ -24,6 +26,8 @@ config = { _id: "s1", members:[
 		  { _id : 2, host : "$node2:37017" }]};
 rs.initiate(config)
 EOF
+
+sleep 3
 
 mongo --port 47017 << EOF
 config = { _id: "conf", members:[
@@ -34,11 +38,11 @@ rs.initiate(config)
 EOF
 
 
-wait 5
+sleep 5
 
 docker container run -d -p 27040:27017 --name router0 --entrypoint mongos mongo --port 27040 --configdb "conf/$node1:47017,$node1:47018,$node2:47017"
 
-wait 5
+sleep 5
 
 mongo --port 27040 <<'EOF'
 db.adminCommand( { addshard : "s0/localhost:27017" } );
