@@ -1,7 +1,11 @@
 steps to run the swarm locally:
 
-enter the ./mong_conf_image/ directory
-docker build -t mong_conf .
+(optional) run the following command to clean your docker related files:
+(this may delete some stuff you don't want it to though so be aware)
+docker system prune --volumes
+
+enter the ./mongos_conf_image/ directory
+docker build -t mongos_conf .
 
 enter the ./rs_conf_image/ directory
 docker build -t rs_conf .
@@ -33,3 +37,23 @@ you will be presented with a command that you can run on the other machines to h
 then running 
 docker stack deploy -c docker-compose.yml cluster
 on the initial (manager) node should spread the containers out amongst all the worker nodes
+
+
+To add a new service to the swarm that isn't part of the initial docker-compose file
+that gets run with docker stack deploy, use the following command:
+docker service create --network <swarm_network_name> --name <service_name> <image> <commands>
+ex. docker service create --network cluster_default --name temp_mong mongo --port 27017
+
+If you omit the network, or you get the network name wrong, your new service won't be able to
+access the original swarm services by their hostnames (ex. s0rs0, mongos0, etc.)
+docker network ls # to see the networks
+docker network inspect <network_id> # to see which containers are currently on this network
+
+
+
+Troubleshooting:
+
+docker service ps --no-trunc {serviceName}  # see why a service is crashing
+docker service ls
+docker service logs <service id>
+docker logs <container_id>

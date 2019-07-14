@@ -31,64 +31,64 @@ services:
             - s0rs2
             
     # shard 1
-    s1rs0:
-        hostname: s1rs0
-        container_name: s1rs0
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
-    s1rs1:
-        hostname: s1rs1
-        container_name: s1rs1
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
-    s1rs2:
-        hostname: s1rs2
-        container_name: s1rs2
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
-    s1conf:
-        hostname: s1conf
-        container_name: s1conf
-        image: rs_conf
-        restart: on-failure
-        command: /bin/bash -c "shard=s1 /usr/bin/init.sh"
-        depends_on:
-            - s1rs0
-            - s1rs1
-            - s1rs2
+    # s1rs0:
+        # hostname: s1rs0
+        # container_name: s1rs0
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
+    # s1rs1:
+        # hostname: s1rs1
+        # container_name: s1rs1
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
+    # s1rs2:
+        # hostname: s1rs2
+        # container_name: s1rs2
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s1 --shardsvr --smallfiles"
+    # s1conf:
+        # hostname: s1conf
+        # container_name: s1conf
+        # image: rs_conf
+        # restart: on-failure
+        # command: /bin/bash -c "shard=s1 /usr/bin/init.sh"
+        # depends_on:
+            # - s1rs0
+            # - s1rs1
+            # - s1rs2
             
     # shard 2
-    s2rs0:
-        hostname: s2rs0
-        container_name: s2rs0
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
-    s2rs1:
-        hostname: s2rs1
-        container_name: s2rs1
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
-    s2rs2:
-        hostname: s2rs2
-        container_name: s2rs2
-        image: mongo
-        restart: always
-        command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
-    s2conf:
-        hostname: s2conf
-        container_name: s2conf
-        image: rs_conf
-        restart: on-failure
-        command: /bin/bash -c "shard=s2 /usr/bin/init.sh"
-        depends_on:
-            - s2rs0
-            - s2rs1
-            - s2rs2
+    # s2rs0:
+        # hostname: s2rs0
+        # container_name: s2rs0
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
+    # s2rs1:
+        # hostname: s2rs1
+        # container_name: s2rs1
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
+    # s2rs2:
+        # hostname: s2rs2
+        # container_name: s2rs2
+        # image: mongo
+        # restart: always
+        # command: "--port 27017 --replSet s2 --shardsvr --smallfiles"
+    # s2conf:
+        # hostname: s2conf
+        # container_name: s2conf
+        # image: rs_conf
+        # restart: on-failure
+        # command: /bin/bash -c "shard=s2 /usr/bin/init.sh"
+        # depends_on:
+            # - s2rs0
+            # - s2rs1
+            # - s2rs2
             
     # config replica set
     confrs0:
@@ -125,6 +125,7 @@ services:
         hostname: mongos0
         container_name: mongos0
         image: mongo
+        restart: always
         entrypoint: mongos
         command: "--bind_ip_all --port 27017 --configdb conf/confrs0:27017,confrs1:27017,confrs2:27017"
         ports:
