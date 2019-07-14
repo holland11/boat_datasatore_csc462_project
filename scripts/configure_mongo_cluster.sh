@@ -4,7 +4,7 @@ echo "if using 'sudo' to run this script, make sure to use 'sudo -E' so it gains
 # it executes the configuration commands to setup the shard replica sets, config replica set,
 # and adds alls the shards to the mongos router
 
-: << ENDCOMMENT
+
 if [ $LOCAL = 1 ]
 then
 	AWS_INSTANCE_NAME=$name
@@ -12,9 +12,9 @@ then
 	then
 		mongo --port 27017 << EOF
 config = { _id: "s0", members:[
-		  { _id : 0, host : "localhost:27017" },
-		  { _id : 1, host : "localhost:27018" },
-		  { _id : 2, host : "localhost:27019" }]};
+		  { _id : 0, host : "s0rs0" },
+		  { _id : 1, host : "s0rs1" },
+		  { _id : 2, host : "s0rs2" }]};
 rs.initiate(config)
 EOF
 config = 
@@ -22,18 +22,18 @@ config =
 	then
 		mongo --port 37017 << EOF
 config = { _id: "s1", members:[
-		  { _id : 0, host : "localhost:37017" },
-		  { _id : 1, host : "localhost:37018" },
-		  { _id : 2, host : "localhost:37019" }]};
+		  { _id : 0, host : "s1rs0" },
+		  { _id : 1, host : "s1rs1" },
+		  { _id : 2, host : "s1rs2" }]};
 rs.initiate(config)
 EOF
 	elif [ $AWS_INSTANCE_NAME = "confrs0" ] || [ $AWS_INSTANCE_NAME = "confrs1" ] || [ $AWS_INSTANCE_NAME = "confrs2" ]
 	then
 		mongo --port 47017 << EOF
 config = { _id: "conf", members:[
-		  { _id : 0, host : "localhost:47017" },
-		  { _id : 1, host : "localhost:47018" },
-		  { _id : 2, host : "localhost:47019" }]};
+		  { _id : 0, host : "confrs0" },
+		  { _id : 1, host : "confrs1" },
+		  { _id : 2, host : "confrs2" }]};
 rs.initiate(config)
 EOF
 	elif [ $AWS_INSTANCE_NAME = "mongos_router" ]
@@ -44,8 +44,8 @@ EOF
 		sleep 10
 		echo "Connnecting to mongos and enabling sharding"
 		mongo --port $PORT <<EOF
-db.adminCommand( { addshard : "s0/localhost:27017" } );
-db.adminCommand( { addshard : "s1/localhost:37017" } );
+db.adminCommand( { addshard : "s0/s0rs0" } );
+db.adminCommand( { addshard : "s1/s1rs0" } );
 db.adminCommand({enableSharding: "test"})
 db.adminCommand({shardCollection: "test.trimmed", key: {"Heading":1}});
 EOF
@@ -55,10 +55,6 @@ EOF
 		echo "#################################"
 	fi
 else
-	echo "else"
-fi
-ENDCOMMENT
-
 	# make sure in ~/.bashrc:
 	#export AWS_ACCESS_KEY_ID="20 digit code"
 	#export AWS_SECRET_ACCESS_KEY="40 digit code"

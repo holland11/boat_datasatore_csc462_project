@@ -40,16 +40,20 @@ EOF
 
 sleep 5
 
-docker container run -d -p 27040:27017 --name router0 --entrypoint mongos mongo --port 27040 --configdb "conf/$node1:47017,$node1:47018,$node2:47017"
+docker container run -d -p 27040:27017 --name router0 --entrypoint mongos mongo --bind_ip_all --port 27017 --configdb "conf/$node1:47017,$node1:47018,$node2:47017"
+
 
 sleep 5
 
 mongo --port 27040 <<'EOF'
-db.adminCommand( { addshard : "s0/localhost:27017" } );
-db.adminCommand( { addshard : "s1/localhost:37017" } );
-db.adminCommand( { addshard : "s2/localhost:47017" } );
+db.adminCommand( { addshard : "s0/$node1:27017" } );
+db.adminCommand( { addshard : "s1/$node1:37017" } );
 db.adminCommand( { enableSharding : "sharded" } );
-db.adminCommand( { shardCollection : "sharded_collec", key : {"Heading":1} } );
+db.adminCommand( { shardCollection : "sharded.collec", key : {"Heading":1} } );
 EOF
 
 echo "done"
+
+# db.adminCommand( { addshard : "s0/172.31.16.113:27017" } );
+# db.adminCommand( { addshard : "s1/172.31.16.113:37017" } );
+# db.adminCommand( { addshard : "s2/172.31.16.113:47017" } );
