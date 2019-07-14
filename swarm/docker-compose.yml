@@ -1,0 +1,125 @@
+version: "3"
+services:
+    # shard 0
+    s0rs0:
+        hostname: s0rs0
+        container_name: s0rs0
+        image: mongo
+        command: "--port 27017 --replSet s0 --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s0rs1:
+        hostname: s0rs1
+        container_name: s0rs1
+        image: mongo
+        command: "--port 27017 --replSet s0 --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s0rs2:
+        hostname: s0rs2
+        container_name: s0rs2
+        image: mongo
+        command: "--port 27017 --replSet s0 --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s0conf:
+        hostname: s0conf
+        container_name: s0conf
+        image: mongo_conf
+        deploy:
+            restart_policy:
+                condition: on-failure
+        command: /bin/bash -c "type=rs_conf shard=s0 /usr/bin/init.sh"
+        networks:
+            - "cluster_net"
+        depends_on:
+            - s0rs0
+            - s0rs1
+            - s0rs2
+        restart: on-failure
+            
+    # config replica set
+    confrs0:
+        hostname: confrs0
+        container_name: confrs0
+        image: mongo
+        command: "--port 27017 --replSet conf --configsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    confrs1:
+        hostname: confrs1
+        container_name: confrs1
+        image: mongo
+        command: "--port 27017 --replSet conf --configsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    confrs2:
+        hostname: confrs2
+        container_name: confrs2
+        image: mongo
+        command: "--port 27017 --replSet conf --configsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    confconf:
+        hostname: confconf
+        container_name: confconf
+        image: mongo_conf
+        deploy:
+            restart_policy:
+                condition: on-failure
+        command: /bin/bash -c "type=rs_conf shard=conf /usr/bin/init.sh"
+        networks:
+            - "cluster_net"
+        depends_on:
+            - confrs0
+            - confrs1
+            - confrs2
+        restart: on-failure
+        
+    # mongo router
+    mongos0:
+        hostname: mongos0
+        container_name: mongos0
+        image: mongo
+        deploy:
+            replicas: 3
+        entrypoint: mongos
+        command: "--bind_ip_all --port 27017 --configdb conf/confrs0:27017,confrs1:27017,confrs2:27017"
+        networks:
+            - "cluster_net"
+        ports:
+            - "27017:27017"
+        depends_on:
+            - confconf
+    mongos0conf:
+        hostname: mongos0conf
+        container_name: mongos0conf
+        image: mongo_conf
+        deploy:
+            restart_policy:
+                condition: on-failure
+        command: /bin/bash -c "type=mongos_conf /usr/bin/init.sh"
+        networks:
+            - "cluster_net"
+        depends_on:
+            - mongos0
+        restart: on-failure
+        
+networks:
+    cluster_net:
+        external: true
+        
+# version: "3"
+# services:
+    # s0:
+        # hostname: s0
+        # image: mongo
+        # expose:
+            # - "27017"
+        # command: "--port 27017 --replSet s0"
+        # deploy:
+            # mode: replicated
+            # replicas: 3
+    # s0_config:
+        # image: ubuntu
+        # run: /bin/bash -c "apt-get update; apt-get -y install dnsutils;"

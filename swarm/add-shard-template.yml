@@ -1,0 +1,49 @@
+# template for an add-shard.yml file
+# the use case for this file is when the addShard.sh script is called,
+# the script will have a line:
+# sed "s/s%@/s${shard}/g" add-shard-template.yml > add-shard.yml
+# and now add-shard.yml has been created with the correct shard numbers
+
+version: "3"
+services:
+    s%@rs0:
+        hostname: s%@rs0
+        container_name: s%@rs0
+        image: mongo
+        command: "--port 27017 --replSet s%@ --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s%@rs1:
+        hostname: s%@rs1
+        container_name: s%@rs1
+        image: mongo
+        command: "--port 27017 --replSet s%@ --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s%@rs2:
+        hostname: s%@rs2
+        container_name: s%@rs2
+        image: mongo
+        command: "--port 27017 --replSet s%@ --shardsvr --smallfiles"
+        networks:
+            - "cluster_net"
+    s%@conf:
+        hostname: s%@conf
+        container_name: s%@conf
+        image: mongo_conf
+        deploy:
+            restart_policy:
+                condition: on-failure
+        command: /bin/bash -c "type=add_shard shard=s%@ /usr/bin/init.sh"
+        networks:
+            - "cluster_net"
+        depends_on:
+            - s%@rs0
+            - s%@rs1
+            - s%@rs2
+        restart: on-failure
+        
+networks:
+    cluster_net:
+        external: true
+        
