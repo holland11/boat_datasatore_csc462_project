@@ -5,6 +5,26 @@ import './ReadForm.css';
 
 export default function ReadForm(props) {
 	const data = props.data;
+	/* const weightOne = {
+		min: data["weightOne-min"],
+		max: data["weightOne-max"],
+	};
+	const size = {
+		min: data["size-min"],
+		max: data["size-max"],
+	};
+	const quantity = {
+		min: data["quantity-min"],
+		max: data["quantity-max"],
+	};
+	const axes = {
+		lcg: {min: data["lcg-min"], max: data["lcg-max"]},
+		tcg: {min: data["tcg-min"], max: data["tcg-max"]},
+		vcg: {min: data["vcg-min"], max: data["vcg-max"]},
+		lm: {min: data["lm-min"], max: data["lm-max"]},
+		tm: {min: data["tm-min"], max: data["tm-max"]},
+		vm: {min: data["vm-min"], max: data["vm-max"]},
+	} */
 	return (
 		<form onSubmit={props.onSubmit}>
 			<div className="textFields">
@@ -65,7 +85,7 @@ export default function ReadForm(props) {
 				<LabelledRange
 					name="weightOne"
 					label="Weight Per Unit"
-					value={data.quantity}
+					value={data.weightOne}
 					onChange={props.onChange}
 				/>
 				<LabelledRange

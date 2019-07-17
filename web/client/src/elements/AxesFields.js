@@ -16,15 +16,15 @@ function AxesFields(props) {
 			<tbody className="axis-fields">
 				<tr>
 					<th>Center of Gravity</th>
-					<Range wrapper="td" name="lcg" onChange={props.onChange} {...data.lcg}/>
-					<Range wrapper="td" name="tcg" onChange={props.onChange} {...data.tcg}/>
-					<Range wrapper="td" name="vcg" onChange={props.onChange} {...data.vcg}/>
+					<Range wrapper="td" name="axis-lcg" onChange={props.onChange} {...data.lcg}/>
+					<Range wrapper="td" name="axis-tcg" onChange={props.onChange} {...data.tcg}/>
+					<Range wrapper="td" name="axis-vcg" onChange={props.onChange} {...data.vcg}/>
 				</tr>
 				<tr>
 					<th>Moment of Inertia</th>
-					<Range wrapper="td" name="lm" onChange={props.onChange} {...data.lm}/>
-					<Range wrapper="td" name="tm" onChange={props.onChange} {...data.tm}/>
-					<Range wrapper="td" name="vm" onChange={props.onChange} {...data.vm}/>
+					<Range wrapper="td" name="axis-l_m" onChange={props.onChange} {...data.lm}/>
+					<Range wrapper="td" name="axis-t_m" onChange={props.onChange} {...data.tm}/>
+					<Range wrapper="td" name="axis-v_m" onChange={props.onChange} {...data.vm}/>
 				</tr>
 			</tbody>
 		</table>

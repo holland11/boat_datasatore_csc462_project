@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './LabelledText.css';
 
 function LabelledText(props) {
 	const htmlFor = props.name + "-field";
@@ -21,7 +22,7 @@ function Input(props) {
 	const field = (
 		<input
 			type="text"
-			name={props.name}
+			name={"text_" + props.name}
 			id={htmlFor}
 			value={props.value}
 			onChange={props.onChange}
