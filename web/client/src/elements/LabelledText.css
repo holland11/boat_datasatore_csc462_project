@@ -1,0 +1,8 @@
+.LabelledText.TextArea {
+	display: block;
+	width: 100%;
+}
+.LabelledText.TextArea textarea {
+	width: 100%;
+	min-height: 10em;
+}
