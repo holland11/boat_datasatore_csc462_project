@@ -27,10 +27,11 @@ def main():
                 temp = temp[:4] + temp[12:] 
                 temp[14] = "Transverse Moment"
                 temp[16] = "Material And Color"
+                temp[7] = "Weight Per Unit"
+                temp = temp[:9] + temp[10:]
                 for i in range(len(temp)):
-                    print('{}: '.format(temp[i]),end='')
                     temp[i] = temp[i].replace(' ', '_') # replace spaces with underscores
-                    print('<input type="text" name="{}">\n<br>\n'.format(temp[i]),end='')
+                    print('{}: {}'.format(i,temp[i]))
                 row = temp
                 col_headers = row
                 for i in range(len(row)):
@@ -53,6 +54,7 @@ def main():
                 temp = temp[:4] + temp[5:] # 4:Selected Item
                 temp = temp[:4] + temp[12:]				
 					# 4:GCMNA Point Person  5:History  6:Builder  ID Number  7:Location  8:Category  9:Electrical  10:Unit Measurement (Feet)  11:Preferred MFG
+                temp = temp[:9] + temp[10:] # 9: Weight_Total_(LBS)
                 row = temp
                 spec_items.append(row)
                 if (row[3] == ''): continue # Features column is empty so we skip (2/2522 rows have this empty)

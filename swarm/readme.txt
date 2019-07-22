@@ -66,4 +66,4 @@ docker system prune --volumes 	# delete many of your docker files which can fix 
 docker system prune -a --volumes 	# same as above but also deletes all your docker images
 docker node ls 	# see all the nodes connected to the swarm
 docker node inspect <node_id>
-docker service ps <service_name>	# shows you which node the service is currently running on
+docker service ps <service_name> -- pretty	# shows you which node the service is currently running on
