@@ -62,6 +62,11 @@ module.exports = {
 		console.log(parsed_query)
 		read = req.body.mode == 'read'
 		
+		if (!mongoose.connection.db) {
+			// mongoose didn't have an initial connection so we need to try again
+			mongoose.connect('mongodb://mongos0:27017/boat', {useNewUrlParser: true});
+		}
+		
 		if (read) {
 			Part.find(parsed_query, (err, foundParts) => {
 				if (err) {
