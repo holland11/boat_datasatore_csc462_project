@@ -4,7 +4,7 @@
 # sed "s/s%@/s${shard}/g" add-shard-template.yml > add-shard.yml
 # and now add-shard.yml has been created with the correct shard numbers
 
-version: "3"
+version: "3.7"
 services:
     s%@rs0:
         hostname: s%@rs0
@@ -24,6 +24,10 @@ services:
         hostname: s%@rs2
         container_name: s%@rs2
         image: mongo
+        deploy:
+            placement:
+                preferences:
+                    - spread: node.labels.arbiters
         command: "--port 27017 --replSet s%@ --shardsvr --smallfiles"
         networks:
             - "cluster_net"

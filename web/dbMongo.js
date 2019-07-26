@@ -1,32 +1,32 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const partSchema = new Schema(
-	{
-		Heading: String,
-		Spec_Heading: String,
-		Sorting_Nature_of_Info_Produced: {type: String, default: "Spec Item"},
-		Features: [
-			String
-		],
-		Model: String,
-		Hyperlink: String,
-		Source: String,
-		Weight_Per_Unit: mongoose.Decimal128,
-		Quantity: Number,
-		LCG: mongoose.Decimal128,
-		TCG: mongoose.Decimal128,
-		VCG: mongoose.Decimal128,
-		Longitudinal_Moment: Number,
-		Transverse_Moment: Number,
-		Vertical_Moment: Number,
-		Material_And_Color: String,
-		Size: String
-	},
-	{
-		timestamps: true
-	}
-)
+const boatSchema = new Schema({
+	Name: String
+})
+
+const partSchema = new Schema({
+	Heading: String,
+	Spec_Heading: String,
+	Features: [
+		String
+	],
+	Model: String,
+	Hyperlink: String,
+	Source: String,
+	Weight: mongoose.Decimal128,
+	Material_And_Color: String,
+	Size: String
+},
+{
+	timestamps: true
+})
+
+const boatPartSchema({
+	BoatID: String,
+	PartID: String,
+	Quantity: Number
+})
 
 const Part = mongoose.model('parts', partSchema)
 
@@ -36,17 +36,46 @@ parse_query = (args) => {
 		if (args[key] == "") {
 			continue
 		}
-		if (args[key] && args[key].min) {
-			if (args[key].min == -1 && args[key].max == -1) {
-				continue
-			} else {
+		if (args[key] && args[key].min && args[key].max) {
+			if (args[key].min == -1 && args[key].max == -1) continue
+			else {
 				// turn Size: { min: -1, max: 23 } into range query
+				if (key == "Weight_Per_Unit") {
+					result[key] = {
+						"$lte": parseFloat(args[key].max),
+						"$gte": parseFloat(args[key].min)
+					}
+				} else {
+					result[key] = { 
+						"$lte": parseInt(args[key].max),
+						"$gte": parseInt(args[key].min)
+					}
+				}
 				continue
 			}
 		}
 		if (key == "axes") {
 			// handle the lcg, tcg, vcg, lm, tm, vm fields
-			
+			for (axkey in args[key]) {
+				if (args[key][axkey].min == -1 && args[key][axkey].max == -1) continue
+				name = "LCG"
+				if (axkey == "tcg") name = "TCG"
+				else if (axkey == "vcg") name = "VCG"
+				else if (axkey == "lm") name = "Longitudinal_Moment"
+				else if (axkey == "tm") name = "Transverse_Moment"
+				else if (axkey == "vm") name = "Vertical_Moment"
+				if (axkey == "lcg" || axkey == "tcg" || axkey == "vcg") {
+					result[name] = {
+						"$lte": parseFloat(args[key][axkey]).max,
+						"$gte": parseFloat(args[key][axkey]).min
+					}
+				} else {
+					result[name] = {
+						"$lte": parseInt(args[key][axkey]).max,
+						"$gte": parseInt(args[key][axkey]).min
+					}
+				}
+			}
 			continue
 		}
 		result[key] = args[key]
@@ -75,6 +104,8 @@ module.exports = {
 						err
 					})
 				} else {
+					console.log("read:")
+					console.log(foundParts)
 					res.send({
 						success: true,
 						parts: foundParts
@@ -84,12 +115,37 @@ module.exports = {
 		} else { // write
 			if (parsed_query._id) {
 				// if they provide an _id, then it's probably an update request
+				Part.findOne({_id: parsed_query._id}, (err, foundPart) => {
+					if (err) {
+						console.log(err)
+						console.log("error searching for part with provided _id")
+						res.send({ success: false, err })
+					} else {
+						let newPart = new Part()
+						if (foundPart) newPart = foundPart;
+						for (key in parsed_query) {
+							newPart[key] = parsed_query[key]
+						}
+						newPart.save().then(result => {
+							console.log("wrote:")
+							console.log(result)
+							res.send({
+								success: true,
+								part: result
+							})
+						})
+					}
+				})
 			} else {
 				let newPart = new Part(parsed_query)
-				newPart.save().then(result => res.send({
-					success: true,
-					result: result
-				}))
+				newPart.save().then(result => {
+					console.log("wrote:")
+					console.log(result)
+					res.send({
+						success: true,
+						part: result
+					})
+				})
 			}
 		}
 	}

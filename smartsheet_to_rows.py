@@ -27,8 +27,10 @@ def main():
                 temp = temp[:4] + temp[12:] 
                 temp[14] = "Transverse Moment"
                 temp[16] = "Material And Color"
-                temp[7] = "Weight Per Unit"
+                temp[7] = "Weight"
                 temp = temp[:9] + temp[10:]
+                temp = temp[:9] + temp[15:]
+                temp = temp[:2] + temp[3:]
                 for i in range(len(temp)):
                     temp[i] = temp[i].replace(' ', '_') # replace spaces with underscores
                     print('{}: {}'.format(i,temp[i]))
@@ -55,6 +57,9 @@ def main():
                 temp = temp[:4] + temp[12:]				
 					# 4:GCMNA Point Person  5:History  6:Builder  ID Number  7:Location  8:Category  9:Electrical  10:Unit Measurement (Feet)  11:Preferred MFG
                 temp = temp[:9] + temp[10:] # 9: Weight_Total_(LBS)
+                temp = temp[:9] + temp[15:]
+					# 9: LCG 10: TCG 11: VCG 12: Longitudinal_Moment 13: Transverse_Moment 14: Vertical_Moment
+                temp = temp[:2] + temp[3:] # 2: Sorting_Nature_of_Info_Produced
                 row = temp
                 spec_items.append(row)
                 if (row[3] == ''): continue # Features column is empty so we skip (2/2522 rows have this empty)

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
     # shard 0
     s0rs0:
@@ -19,6 +19,10 @@ services:
         hostname: s0rs2
         container_name: s0rs2
         image: mongo
+        deploy:
+            placement:
+                preferences:
+                    - spread: node.labels.arbiters
         command: "--port 27017 --replSet s0 --shardsvr --smallfiles"
         networks:
             - "cluster_net"
@@ -43,6 +47,10 @@ services:
         hostname: confrs0
         container_name: confrs0
         image: mongo
+        deploy:
+            placement:
+                preferences:
+                    - spread: node.labels.router
         command: "--port 27017 --replSet conf --configsvr --smallfiles"
         networks:
             - "cluster_net"
@@ -50,6 +58,10 @@ services:
         hostname: confrs1
         container_name: confrs1
         image: mongo
+        deploy:
+            placement:
+                preferences:
+                    - spread: node.labels.router
         command: "--port 27017 --replSet conf --configsvr --smallfiles"
         networks:
             - "cluster_net"
@@ -57,6 +69,10 @@ services:
         hostname: confrs2
         container_name: confrs2
         image: mongo
+        deploy:
+            placement:
+                preferences:
+                    - spread: node.labels.router
         command: "--port 27017 --replSet conf --configsvr --smallfiles"
         networks:
             - "cluster_net"
@@ -83,12 +99,13 @@ services:
         image: mongo
         deploy:
             replicas: 3
+            placement:
+                preferences:
+                    - spread: node.labels.router
         entrypoint: mongos
         command: "--bind_ip_all --port 27017 --configdb conf/confrs0:27017,confrs1:27017,confrs2:27017"
         networks:
             - "cluster_net"
-        ports:
-            - "27017:27017"
         depends_on:
             - confconf
     mongos0conf:
@@ -111,7 +128,10 @@ services:
         container_name: web_app
         image: web_app
         deploy:
-            replicas: 1
+            replicas: 3
+            placement:
+                preferences:
+                    - spread: node.labels.router
         command: /bin/bash -c "cd /usr/src/web_app && npm install -y && npm start"
         networks:
             - "cluster_net"
@@ -121,3 +141,46 @@ services:
 networks:
     cluster_net:
         external: true
+        
+# service placement:
+    # label.router=0:
+        # conf0
+        # mongos0-0
+        # web_app-0
+    # label.router=1:
+        # conf1
+        # mongos0-1
+        # web_app-1
+    # label.router=2:
+        # conf2
+        # mongos0-2
+        # web_app-2
+    # label.arbiters:
+        # arbiters
+# Example
+    # 0:
+        # conf0
+        # mongos0-0
+        # web_app-0
+    # 1:
+        # conf1
+        # mongos0-1
+        # web_app-1
+    # 2:
+        # conf2
+        # mongos0-2
+        # web_app-2
+    # 3:
+        # arbiters
+    # 4:
+        # s0rs0
+    # 5:
+        # s0rs1
+    # 6:
+        # s1rs0
+    # 7:
+        # s1rs1
+    # 8:
+        # s2rs0
+    # 9:
+        # s2rs1
