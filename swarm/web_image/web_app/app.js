@@ -3,6 +3,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var dotenv = require('dotenv');
+dotenv.config();
+
 var indexRouter = require('./routes/index');
 var queryRouter = require('./routes/query');
 var csvRouter = require('./routes/csv');

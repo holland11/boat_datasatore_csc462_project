@@ -32,7 +32,7 @@ const dbMongo = require('../dbMongo');
 
 
 router.post('/', (req, res, next) => {
-	console.log(JSON.stringify(req.body));
+	// console.log(JSON.stringify(req.body));
 	if (req.body.source === 'sql' || req.body.source === 'both') {
 		dbSQL.handle_req(req, res);
 	}
