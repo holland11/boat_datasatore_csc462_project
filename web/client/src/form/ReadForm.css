@@ -1,9 +1,0 @@
-.textFields {
-	display: table;
-}
-.textFields > div {
-	display: table-row;
-}
-.textFields > div > * {
-	display: table-cell;
-}

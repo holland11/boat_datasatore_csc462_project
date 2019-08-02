@@ -106,6 +106,8 @@ services:
         command: "--bind_ip_all --port 27017 --configdb conf/confrs0:27017,confrs1:27017,confrs2:27017"
         networks:
             - "cluster_net"
+        ports:
+            - "27017:27017"
         depends_on:
             - confconf
     mongos0conf:

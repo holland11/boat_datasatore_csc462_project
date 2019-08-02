@@ -31,6 +31,7 @@ def main():
                 temp = temp[:9] + temp[10:]
                 temp = temp[:9] + temp[15:]
                 temp = temp[:2] + temp[3:]
+                temp = temp[:7] + temp[8:]
                 for i in range(len(temp)):
                     temp[i] = temp[i].replace(' ', '_') # replace spaces with underscores
                     print('{}: {}'.format(i,temp[i]))
@@ -60,6 +61,7 @@ def main():
                 temp = temp[:9] + temp[15:]
 					# 9: LCG 10: TCG 11: VCG 12: Longitudinal_Moment 13: Transverse_Moment 14: Vertical_Moment
                 temp = temp[:2] + temp[3:] # 2: Sorting_Nature_of_Info_Produced
+                temp = temp[:7] + temp[8:] # 7: Quantity
                 row = temp
                 spec_items.append(row)
                 if (row[3] == ''): continue # Features column is empty so we skip (2/2522 rows have this empty)
