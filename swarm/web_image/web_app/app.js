@@ -9,6 +9,7 @@ dotenv.config();
 var indexRouter = require('./routes/index');
 var queryRouter = require('./routes/query');
 var csvRouter = require('./routes/csv');
+var apiRouter = require('./routes/api');
 
 var app = express();
 
@@ -21,5 +22,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/query', queryRouter);
 app.use('/csv', csvRouter);
+app.use('/api', apiRouter);
 
 module.exports = app;

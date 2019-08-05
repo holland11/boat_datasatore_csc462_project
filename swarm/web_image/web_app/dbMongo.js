@@ -84,10 +84,8 @@ parse_query = (args) => {
 
 module.exports = {
 	handle_req: function(req, res) {
-		console.log("in mongodb")
-		console.log(req.body.args)
-		parsed_query = parse_query(req.body.args)
-		console.log(parsed_query)
+		//console.log("in mongodb")
+		//console.log(req.body.args)
 		read = req.body.mode == 'read'
 		
 		if (!mongoose.connection.db) {
@@ -96,25 +94,23 @@ module.exports = {
 		}
 		
 		if (read) {
-			Part.find(parsed_query, (err, foundParts) => {
+			Part.find(req.body.args, (err, foundParts) => {
 				if (err) {
 					res.send({
 						success: false,
+						message: "Error while trying to find the part in MongoDB.",
 						err
 					})
 				} else {
-					console.log("read:")
-					console.log(foundParts)
-					res.send({
-						success: true,
-						parts: foundParts
-					})
+					//console.log("read:")
+					//console.log(foundParts)
+					res.send(foundParts)
 				}
 			})
 		} else { // write
-			if (parsed_query._id) {
+			if (req.body.args._id) {
 				// if they provide an _id, then it's probably an update request
-				Part.findOne({_id: parsed_query._id}, (err, foundPart) => {
+				Part.findOne({_id: req.body.args._id}, (err, foundPart) => {
 					if (err) {
 						console.log(err)
 						console.log("error searching for part with provided _id")
@@ -122,12 +118,12 @@ module.exports = {
 					} else {
 						let newPart = new Part()
 						if (foundPart) newPart = foundPart;
-						for (key in parsed_query) {
-							newPart[key] = parsed_query[key]
+						for (key in req.body.args) {
+							newPart[key] = req.body.args[key]
 						}
 						newPart.save().then(result => {
-							console.log("wrote:")
-							console.log(result)
+							//console.log("wrote:")
+							//console.log(result)
 							res.send({
 								success: true,
 								part: result
@@ -136,10 +132,10 @@ module.exports = {
 					}
 				})
 			} else {
-				let newPart = new Part(parsed_query)
+				let newPart = new Part(req.body.args)
 				newPart.save().then(result => {
-					console.log("wrote:")
-					console.log(result)
+					//console.log("wrote:")
+					//console.log(result)
 					res.send({
 						success: true,
 						part: result
