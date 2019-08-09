@@ -1,0 +1,23 @@
+Introduce myself and project
+  - uvic csc 462 distributed systems
+  - had the head of a naval architecture firm come into class and explain a problem that they are looking to solve which at its core is just going to be a massive database
+
+Tools used
+  - mongodb (talk about relational vs non-relational)
+  - docker and specifically docker swarm
+  - AWS (arbitrary decision for cloud hosting)
+  - web app run on nodejs with express
+
+Show diagrams
+  - mongodb doc diagram (briefly mention the control flow between components)
+  - diagram showing different services and shards (mention the redundancy and replication to achieve availability and fault tolerance)
+  - diagram showing service placement on the different aws isntances
+
+Demo
+  - short cut of aws instances spun up in aws ui
+  - short cuts of docker swarm init and 1 join
+  - short cut of ./startCluster.sh
+  - short cut of ./addShard.sh
+  - short cut of python script issuing writes to the api
+  - db.parts.count() to show all the writes were successful
+  - sh.status() to show the data spread out across the shards
