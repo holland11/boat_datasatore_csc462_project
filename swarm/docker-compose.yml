@@ -29,7 +29,7 @@ services:
     s0conf:
         hostname: s0conf
         container_name: s0conf
-        image: mongo_conf
+        image: patrickeholland/mongo_conf:latest
         deploy:
             restart_policy:
                 condition: on-failure
@@ -79,7 +79,7 @@ services:
     confconf:
         hostname: confconf
         container_name: confconf
-        image: mongo_conf
+        image: patrickeholland/mongo_conf:latest
         deploy:
             restart_policy:
                 condition: on-failure
@@ -113,7 +113,7 @@ services:
     mongos0conf:
         hostname: mongos0conf
         container_name: mongos0conf
-        image: mongo_conf
+        image: patrickeholland/mongo_conf:latest
         deploy:
             restart_policy:
                 condition: on-failure
@@ -128,7 +128,7 @@ services:
     web_app:
         hostname: web_app
         container_name: web_app
-        image: web_app
+        image: patrickeholland/web_app:latest
         deploy:
             replicas: 3
             placement:

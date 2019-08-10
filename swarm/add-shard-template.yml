@@ -34,7 +34,7 @@ services:
     s%@conf:
         hostname: s%@conf
         container_name: s%@conf
-        image: mongo_conf
+        image: patrickeholland/mongo_conf:latest
         deploy:
             restart_policy:
                 condition: on-failure
