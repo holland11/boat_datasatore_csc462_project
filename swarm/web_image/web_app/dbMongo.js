@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const csv = require('csv-parser')
+const fs = require('fs')
 
 const boatSchema = new Schema({
 	Name: String
@@ -82,6 +84,48 @@ parse_query = (args) => {
 	return result
 };
 
+massWrite = (count, res) => {
+	const data = [];
+	
+	fs.createReadStream('./trimmed.csv')
+		.pipe(csv())
+		.on('data', (trimmed) => data.push(trimmed))
+		.on('end', () => {
+			for (var i=0; i<data.length; i++) {
+				const row = data[i];
+				row.Features = row.Features.split(','); // convert to a list instead of string
+				for (var j=0; j<row.Features.length; j++) {
+					row.Features[j] = row.Features[j].trim(); // get rid of leading whitespace
+				}
+				for (key in row) {
+					if (row[key] == "") {
+						delete row[key];
+					}
+				}
+			}
+			
+			num_duplicates = count / data.length;
+			num_duplicates = Math.floor(num_duplicates + 0.99); // round up
+			console.log("dupes: " + num_duplicates);
+			var temp = false;
+			for (var i=0; i<num_duplicates; i++) {
+				Part.insertMany(data, (err, docs) => {
+					if (err) {
+						res.send({
+							success: false,
+							err
+						});
+						temp = true;
+					}
+				});
+				if (temp) return;
+			}
+			res.send({
+				success: true
+			});
+		});
+};
+
 module.exports = {
 	handle_req: function(req, res) {
 		//console.log("in mongodb")
@@ -91,6 +135,10 @@ module.exports = {
 		if (!mongoose.connection.db) {
 			// mongoose didn't have an initial connection so we need to try again
 			mongoose.connect('mongodb://mongos0:27017/boat', {useNewUrlParser: true});
+		}
+		
+		if (req.body.mode == "csvWrite") {
+			return massWrite(req.body.count, res);
 		}
 		
 		if (read) {

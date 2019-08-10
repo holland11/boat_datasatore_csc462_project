@@ -11,6 +11,27 @@ var queryRouter = require('./routes/query');
 var csvRouter = require('./routes/csv');
 var apiRouter = require('./routes/api');
 
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://mongos0:27017/boat', {useNewUrlParser: true});
+var mongodb = mongoose.connection;
+mongodb.on('connected', () => {
+	console.log("Connected to mongodb");
+});
+mongodb.on('error', (err) => {
+	console.log("Error connecting to mongo");
+	console.log(err);
+	console.log("Error connecting to mongo");
+});
+mongodb.on('disconnected', () => {
+	console.log("Mongo connection disconnected");
+});
+process.on('SIGINT', () => {  
+  mongodb.close(() => { 
+    console.log('Mongoose default connection disconnected through app termination'); 
+    process.exit(0); 
+  }); 
+});
+
 var app = express();
 
 app.use(logger('dev'));

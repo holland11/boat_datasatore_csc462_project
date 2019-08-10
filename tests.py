@@ -7,8 +7,8 @@ from csv import reader
 
 thread_local = threading.local()
 
-url = 'http://localhost:80/api/write/mongo/part/'
-num_duplicates = 30
+url = 'http://54.71.115.212:80/api/write/mongo/part/'
+num_duplicates = 50
 num_threads = 5
 
 
